@@ -12,15 +12,20 @@ const MainContainer = styled.div`
   width: 100%;
   margin: 1rem auto;
   font-size: 1rem;
-  color: #696f84;
+  color: rgba(0, 0, 0, 0.5);
   text-align: center;
+
+  @media (min-width: 767px) {
+    width: 700px;
+  }
+
   @media (min-width: 992px) {
     width: 900px;
   }
 `;
 
 const Cards = styled.div`
-  @media (min-width: 992px) {
+  @media (min-width: 767px) {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -34,6 +39,11 @@ const Card = styled.div`
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   position: relative;
 
+  @media (min-width: 767px) {
+    width: 340px;
+    margin: 10px 0;
+  }
+
   @media (min-width: 992px) {
     width: 435px;
     margin: 10px 0;
@@ -42,9 +52,10 @@ const Card = styled.div`
 
 const CardImage = styled.img`
   width: 100%;
-  height: 250px;
+  height: auto;
 
-  @media (min-width: 992px) {
+  @media (min-width: 767px) {
+    height: 250px;
     object-fit: cover;
   }
 `;
