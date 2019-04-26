@@ -178,9 +178,9 @@ export default connect(state => state)(
         });
     }
 
-    handleDonate(charitiesId) {
+    handleDonate = charitiesId => {
       this.handleClose(charitiesId);
-    }
+    };
 
     handleClose(charitiesId = null) {
       const self = this;
@@ -266,7 +266,7 @@ export default connect(state => state)(
             <CardImage src={`images/${item.image}`} />
             <CardContent>
               <CardText>{item.name}</CardText>
-              <CardButton onClick={self.handleDonate.bind(self, item.id)}>
+              <CardButton onClick={() => self.handleDonate(item.id)}>
                 Donate
               </CardButton>
             </CardContent>

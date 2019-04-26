@@ -22,12 +22,12 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: [/node_modules/],
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
-        },
-      },
+          loader: "babel-loader"
+        }
+      }
     ],
   },
 };
