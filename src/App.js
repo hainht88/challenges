@@ -5,9 +5,105 @@ import fetch from "isomorphic-fetch";
 
 import { summaryDonations } from "./helpers";
 
+const MainContainer = styled.div`
+  width: 100%;
+  margin: 1rem auto;
+  font-size: 1rem;
+
+  @media (min-width: 992px) {
+    width: 900px;
+  }
+`;
+
+const Cards = styled.div`
+  @media (min-width: 992px) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+`;
+
 const Card = styled.div`
   margin: 10px;
   border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  position: relative;
+
+  @media (min-width: 992px) {
+    width: 435px;
+    margin: 10px 0;
+  }
+`;
+
+const CardImage = styled.img`
+  width: 100%;
+  height: 250px;
+
+  @media (min-width: 992px) {
+    object-fit: cover;
+  }
+`;
+
+const CardContent = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const CardDonate = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const DonateList = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  > label {
+    margin: 0 5px;
+
+    > input[type="radio"]:checked {
+      background-color: #4398f0;
+    }
+  }
+`;
+
+const CardButton = styled.button`
+  border: 1px solid #4398f0;
+  border-radius: 5px;
+  background-color: transparent;
+  color: #4398f0;
+  width: 80px;
+  height: 30px;
+  cursor: pointer;
+  margin: 1rem;
+
+  &:hover {
+    color: #fff;
+    background-color: #4398f0;
+  }
+`;
+
+const CardText = styled.div`
+  margin: 1rem;
+`;
+
+const Message = styled.div`
+  color: red;
+  margin: 1rem 0;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
 `;
 
 export default connect(state => state)(
@@ -56,46 +152,45 @@ export default connect(state => state)(
               onClick={function() {
                 self.setState({ selectedAmount: amount });
               }}
-            />{" "}
+            />
             {amount}
           </label>
         ));
 
         return (
           <Card key={i}>
-            <p>{item.name}</p>
-            {payments}
-            <button
-              onClick={handlePay.call(
-                self,
-                item.id,
-                self.state.selectedAmount,
-                item.currency
-              )}
-            >
-              Pay
-            </button>
+            <CardDonate>
+              <p>{item.name}</p>
+              <DonateList>{payments}</DonateList>
+              <CardButton
+                onClick={handlePay.call(
+                  self,
+                  item.id,
+                  self.state.selectedAmount,
+                  item.currency
+                )}
+              >
+                Pay
+              </CardButton>
+            </CardDonate>
+            <CardImage src={`images/${item.image}`} />
+            <CardContent>
+              <CardText>{item.name}</CardText>
+              <CardButton>Donate</CardButton>
+            </CardContent>
           </Card>
         );
       });
 
-      const style = {
-        color: "red",
-        margin: "1em 0",
-        fontWeight: "bold",
-        fontSize: "16px",
-        textAlign: "center"
-      };
-      const donate = this.props.donate;
-      const message = this.props.message;
+      const { donate, message } = this.props;
 
       return (
-        <div>
+        <MainContainer>
           <h1>Tamboon React</h1>
           <p>All donations: {donate}</p>
-          <p style={style}>{message}</p>
-          {cards}
-        </div>
+          <Message>{message}</Message>
+          <Cards>{cards}</Cards>
+        </MainContainer>
       );
     }
   }
@@ -106,7 +201,7 @@ function handlePay(id, amount, currency) {
   return function() {
     fetch("http://localhost:3001/payments", {
       method: "POST",
-      headers: new Headers({ "content-type": "application/json" }),
+      headers: { "content-type": "application/json" },
       body: `{ "charitiesId": ${id}, "amount": ${amount}, "currency": "${currency}" }`
     })
       .then(function(resp) {
