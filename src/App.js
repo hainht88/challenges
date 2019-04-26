@@ -67,7 +67,7 @@ const CardDonate = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1;
 `;
 
 const DonateList = styled.div`
@@ -92,6 +92,29 @@ const CardButton = styled.button`
   &:hover {
     color: #fff;
     background-color: #4398f0;
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.5);
+  background-color: transparent;
+  text-shadow: 0 1px 0 #fff;
+  border: none;
+  z-index: 2;
+  margin: 10px;
+
+  &:hover {
+    color: #4398f0;
+  }
+
+  &:focus {
+    outline: none;
   }
 `;
 
@@ -145,8 +168,11 @@ export default connect(state => state)(
     }
 
     handleDonate(charitiesId) {
-      const self = this;
+      this.handleClose(charitiesId);
+    }
 
+    handleClose(charitiesId = null) {
+      const self = this;
       self.setState({
         selectedCharity: charitiesId,
         selectedAmount: 10
@@ -205,20 +231,25 @@ export default connect(state => state)(
         return (
           <Card key={i}>
             {self.state.selectedCharity === item.id && (
-              <CardDonate>
-                <p>Select the amount to donate (USD)</p>
-                <DonateList>{payments}</DonateList>
-                <CardButton
-                  onClick={self.handlePay.bind(
-                    self,
-                    item.id,
-                    self.state.selectedAmount,
-                    item.currency
-                  )}
-                >
-                  Pay
-                </CardButton>
-              </CardDonate>
+              <div>
+                <CloseButton onClick={self.handleClose.bind(self)}>
+                  <span>&times;</span>
+                </CloseButton>
+                <CardDonate>
+                  <p>Select the amount to donate (USD)</p>
+                  <DonateList>{payments}</DonateList>
+                  <CardButton
+                    onClick={self.handlePay.bind(
+                      self,
+                      item.id,
+                      self.state.selectedAmount,
+                      item.currency
+                    )}
+                  >
+                    Pay
+                  </CardButton>
+                </CardDonate>
+              </div>
             )}
 
             <CardImage src={`images/${item.image}`} />
