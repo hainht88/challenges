@@ -156,41 +156,32 @@ export default connect(state => state)(
 
     componentDidMount() {
       const self = this;
+
       fetch("http://localhost:3001/charities")
-        .then(function(resp) {
-          return resp.json();
-        })
-        .then(function(data) {
-          self.setState({ charities: data });
-        });
+        .then(resp => resp.json())
+        .then(data => self.setState({ charities: data }));
 
       fetch("http://localhost:3001/payments")
-        .then(function(resp) {
-          return resp.json();
-        })
-        .then(function(data) {
+        .then(resp => resp.json())
+        .then(data =>
           self.props.dispatch({
             type: "UPDATE_TOTAL_DONATE",
             amount: summaryDonations(
               data.map(item => !isNaN(item.amount) && item.amount)
             )
-          });
-        });
+          })
+        );
     }
 
-    handleDonate = charitiesId => {
-      this.handleClose(charitiesId);
-    };
+    handleDonate = charitiesId => this.handleClose(charitiesId);
 
-    handleClose(charitiesId = null) {
-      const self = this;
-      self.setState({
+    handleClose = (charitiesId = null) =>
+      this.setState({
         selectedCharity: charitiesId,
         selectedAmount: 10
       });
-    }
 
-    handlePay(id, amount, currency) {
+    handlePay = (id, amount, currency) => {
       const self = this;
 
       fetch("http://localhost:3001/payments", {
@@ -211,7 +202,7 @@ export default connect(state => state)(
             message: `Thanks for donate ${amount}!`
           });
 
-          self.setState({ selectedCharity: null });
+          self.handleClose();
 
           setTimeout(function() {
             self.props.dispatch({
@@ -220,12 +211,20 @@ export default connect(state => state)(
             });
           }, 2000);
         });
-    }
+    };
 
     render() {
       const self = this;
-      const cards = this.state.charities.map(function(item, i) {
-        const payments = self.state.amountDonate.map((amount, j) => (
+      const {
+        charities,
+        amountDonate,
+        selectedAmount,
+        selectedCharity
+      } = this.state;
+      const { donate, message } = this.props;
+
+      const cards = charities.map(function(item, i) {
+        const payments = amountDonate.map((amount, j) => (
           <label key={j}>
             <input
               type="radio"
@@ -233,7 +232,7 @@ export default connect(state => state)(
               onChange={function() {
                 self.setState({ selectedAmount: amount });
               }}
-              checked={self.state.selectedAmount === amount}
+              checked={selectedAmount === amount}
             />
             {amount}
           </label>
@@ -241,21 +240,18 @@ export default connect(state => state)(
 
         return (
           <Card key={i}>
-            {self.state.selectedCharity === item.id && (
+            {selectedCharity === item.id && (
               <div>
-                <CloseButton onClick={self.handleClose.bind(self)}>
+                <CloseButton onClick={self.handleClose}>
                   <span>&times;</span>
                 </CloseButton>
                 <CardDonate>
-                  <p>Select the amount to donate (USD)</p>
+                  <p>Select the amount to donate ({item.currency})</p>
                   <DonateList>{payments}</DonateList>
                   <CardButton
-                    onClick={self.handlePay.bind(
-                      self,
-                      item.id,
-                      self.state.selectedAmount,
-                      item.currency
-                    )}
+                    onClick={() =>
+                      self.handlePay(item.id, selectedAmount, item.currency)
+                    }
                   >
                     Pay
                   </CardButton>
@@ -273,8 +269,6 @@ export default connect(state => state)(
           </Card>
         );
       });
-
-      const { donate, message } = this.props;
 
       return (
         <MainContainer>
