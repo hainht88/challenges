@@ -1,145 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import styled from "styled-components";
 import fetch from "isomorphic-fetch";
 
 import { summaryDonations } from "./helpers";
 
-const MainContainer = styled.div`
-  @import url("https://fonts.googleapis.com/css?family=Roboto");
+import Cards from "./components/Cards";
 
-  font-family: "Roboto", sans-serif;
-  width: 100%;
-  margin: 1rem auto;
-  font-size: 1rem;
-  color: rgba(0, 0, 0, 0.5);
-  text-align: center;
-
-  @media (min-width: 767px) {
-    width: 700px;
-  }
-
-  @media (min-width: 992px) {
-    width: 900px;
-  }
-`;
-
-const Cards = styled.div`
-  @media (min-width: 767px) {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-`;
-
-const Card = styled.div`
-  margin: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  position: relative;
-
-  @media (min-width: 767px) {
-    width: 340px;
-    margin: 10px 0;
-  }
-
-  @media (min-width: 992px) {
-    width: 435px;
-    margin: 10px 0;
-  }
-`;
-
-const CardImage = styled.img`
-  width: 100%;
-  height: auto;
-
-  @media (min-width: 767px) {
-    height: 250px;
-    object-fit: cover;
-  }
-`;
-
-const CardContent = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const CardDonate = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: rgba(255, 255, 255, 0.9);
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-`;
-
-const DonateList = styled.div`
-  display: flex;
-  flex-direction: row;
-
-  > label {
-    margin: 0 5px;
-  }
-`;
-
-const CardButton = styled.button`
-  border: 1px solid #4398f0;
-  border-radius: 5px;
-  background-color: transparent;
-  color: #4398f0;
-  width: 80px;
-  height: 30px;
-  cursor: pointer;
-  margin: 1rem;
-
-  &:hover {
-    color: #fff;
-    background-color: #4398f0;
-  }
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 0;
-  right: 0;
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1;
-  color: rgba(0, 0, 0, 0.5);
-  background-color: transparent;
-  text-shadow: 0 1px 0 #fff;
-  border: none;
-  z-index: 2;
-  margin: 10px;
-
-  &:hover {
-    color: #4398f0;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`;
-
-const CardText = styled.div`
-  margin: 1rem;
-`;
-
-const Message = styled.div`
-  color: red;
-  margin: 1rem 0;
-  font-weight: bold;
-  font-size: 16px;
-  text-align: center;
-`;
+import { MainContainer, Message } from "./styles/style";
 
 export default connect(state => state)(
   class App extends Component {
@@ -159,7 +26,8 @@ export default connect(state => state)(
 
       fetch("http://localhost:3001/charities")
         .then(resp => resp.json())
-        .then(data => self.setState({ charities: data }));
+        .then(data => self.setState({ charities: data }))
+        .catch(e => alert(e));
 
       fetch("http://localhost:3001/payments")
         .then(resp => resp.json())
@@ -170,15 +38,16 @@ export default connect(state => state)(
               data.map(item => !isNaN(item.amount) && item.amount)
             )
           })
-        );
+        )
+        .catch(e => alert(e));
     }
 
     handleDonate = charitiesId => this.handleClose(charitiesId);
 
-    handleClose = (charitiesId = null) =>
+    handleClose = (charitiesId = null, selectedAmount = 10) =>
       this.setState({
         selectedCharity: charitiesId,
-        selectedAmount: 10
+        selectedAmount
       });
 
     handlePay = (id, amount, currency) => {
@@ -223,59 +92,22 @@ export default connect(state => state)(
       } = this.state;
       const { donate, message } = this.props;
 
-      const cards = charities.map(function(item, i) {
-        const payments = amountDonate.map((amount, j) => (
-          <label key={j}>
-            <input
-              type="radio"
-              name="payment"
-              onChange={function() {
-                self.setState({ selectedAmount: amount });
-              }}
-              checked={selectedAmount === amount}
-            />
-            {amount}
-          </label>
-        ));
-
-        return (
-          <Card key={i}>
-            {selectedCharity === item.id && (
-              <div>
-                <CloseButton onClick={self.handleClose}>
-                  <span>&times;</span>
-                </CloseButton>
-                <CardDonate>
-                  <p>Select the amount to donate ({item.currency})</p>
-                  <DonateList>{payments}</DonateList>
-                  <CardButton
-                    onClick={() =>
-                      self.handlePay(item.id, selectedAmount, item.currency)
-                    }
-                  >
-                    Pay
-                  </CardButton>
-                </CardDonate>
-              </div>
-            )}
-
-            <CardImage src={`images/${item.image}`} />
-            <CardContent>
-              <CardText>{item.name}</CardText>
-              <CardButton onClick={() => self.handleDonate(item.id)}>
-                Donate
-              </CardButton>
-            </CardContent>
-          </Card>
-        );
-      });
-
       return (
         <MainContainer>
           <h1>Omise Tamboon React</h1>
-          <p>All donations: {donate}</p>
+          <p>
+            All donations: <strong>{donate}</strong>
+          </p>
           <Message>{message}</Message>
-          <Cards>{cards}</Cards>
+          <Cards
+            charities={charities}
+            amountDonate={amountDonate}
+            selectedAmount={selectedAmount}
+            selectedCharity={selectedCharity}
+            onDonate={self.handleDonate}
+            onClose={self.handleClose}
+            onPay={self.handlePay}
+          />
         </MainContainer>
       );
     }
