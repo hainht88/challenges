@@ -10,7 +10,8 @@ const Cards = ({
   selectedCharity,
   onDonate,
   onClose,
-  onPay
+  onPay,
+  onPaymentChange
 }) => {
   return (
     <CardsContainer>
@@ -24,6 +25,7 @@ const Cards = ({
           onDonate={onDonate}
           onClose={onClose}
           onPay={onPay}
+          onPaymentChange={onPaymentChange}
         />
       ))}
     </CardsContainer>

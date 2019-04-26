@@ -42,6 +42,8 @@ export default connect(state => state)(
         .catch(e => alert(e));
     }
 
+    handlePayChange = amount => this.setState({ selectedAmount: amount });
+
     handleDonate = charitiesId => this.handleClose(charitiesId);
 
     handleClose = (charitiesId = null, selectedAmount = 10) =>
@@ -107,6 +109,7 @@ export default connect(state => state)(
             onDonate={self.handleDonate}
             onClose={self.handleClose}
             onPay={self.handlePay}
+            onPaymentChange={self.handlePayChange}
           />
         </MainContainer>
       );

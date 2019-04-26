@@ -18,7 +18,8 @@ const Card = ({
   selectedCharity,
   onClose,
   onDonate,
-  onPay
+  onPay,
+  onPaymentChange
 }) => (
   <CardContainer>
     {selectedCharity === charity.id && (
@@ -31,6 +32,7 @@ const Card = ({
           <PaymentList
             amountDonate={amountDonate}
             selectedAmount={selectedAmount}
+            onPaymentChange={onPaymentChange}
           />
           <CardButton
             onClick={() => onPay(charity.id, selectedAmount, charity.currency)}

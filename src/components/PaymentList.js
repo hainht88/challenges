@@ -1,7 +1,7 @@
 import React from "react";
 import { DonateList } from "../styles/style";
 
-const PaymentList = ({ amountDonate, selectedAmount }) => {
+const PaymentList = ({ amountDonate, selectedAmount, onPaymentChange }) => {
   return (
     <DonateList>
       {amountDonate.map((amount, index) => (
