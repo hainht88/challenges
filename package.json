@@ -14,9 +14,10 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.3",
     "isomorphic-fetch": "^2.2.1",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
+    "react": "^16.3.0",
+    "react-dom": "^16.3.0",
     "react-redux": "^5.0.6",
+    "react-toast-notifications": "^1.4.0",
     "redux": "^3.7.2",
     "styled-components": "^2.2.1"
   },

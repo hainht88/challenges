@@ -6,7 +6,7 @@ import { summaryDonations } from "./helpers";
 import { updateTotalDonate, updateDonateMessage } from "./actions";
 import Cards from "./components/Cards";
 
-import { MainContainer, Message } from "./styles/style";
+import { MainContainer } from "./styles/style";
 
 const mapStateToProps = ({ donate, message }) => {
   return { donate, message };
@@ -72,10 +72,9 @@ export default connect(
 
           self.props.updateDonateMessage(`Thanks for donate ${amount}!`);
 
-          self.handleClose();
-
           setTimeout(function() {
             self.props.updateDonateMessage("");
+            self.handleClose();
           }, 2000);
         });
     };
@@ -96,8 +95,9 @@ export default connect(
           <p>
             All donations: <strong>{donate}</strong>
           </p>
-          <Message>{message}</Message>
+
           <Cards
+            message={message}
             amountDonate={amountDonate}
             charities={charities}
             selectedAmount={selectedAmount}

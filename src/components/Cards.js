@@ -5,6 +5,7 @@ import Card from "./Card";
 import { CardsContainer } from "../styles/style";
 
 const Cards = ({
+  message,
   amountDonate,
   charities,
   selectedAmount,
@@ -19,6 +20,7 @@ const Cards = ({
       {charities.map(charity => (
         <Card
           key={charity.id}
+          message={message}
           amountDonate={amountDonate}
           selectedAmount={selectedAmount}
           selectedCharity={selectedCharity}

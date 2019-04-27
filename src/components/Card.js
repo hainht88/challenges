@@ -1,6 +1,8 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 import PaymentList from "./PaymentList";
+
+import { Message } from "../styles/style";
 
 import {
   CloseButton,
@@ -13,6 +15,7 @@ import {
 } from "../styles/style";
 
 const Card = ({
+  message,
   charity,
   amountDonate,
   selectedAmount,
@@ -29,17 +32,26 @@ const Card = ({
           <span>&times;</span>
         </CloseButton>
         <CardDonate>
-          <p>Select the amount to donate ({charity.currency})</p>
-          <PaymentList
-            amountDonate={amountDonate}
-            selectedAmount={selectedAmount}
-            onPaymentChange={onPaymentChange}
-          />
-          <CardButton
-            onClick={() => onPay(charity.id, selectedAmount, charity.currency)}
-          >
-            Pay
-          </CardButton>
+          {message === "" ? (
+            <Fragment>
+              <p>Select the amount to donate ({charity.currency})</p>
+              <PaymentList
+                message={message}
+                amountDonate={amountDonate}
+                selectedAmount={selectedAmount}
+                onPaymentChange={onPaymentChange}
+              />
+              <CardButton
+                onClick={() =>
+                  onPay(charity.id, selectedAmount, charity.currency)
+                }
+              >
+                Pay
+              </CardButton>
+            </Fragment>
+          ) : (
+            <Message>{message}</Message>
+          )}
         </CardDonate>
       </div>
     )}
