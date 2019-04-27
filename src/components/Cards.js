@@ -1,11 +1,12 @@
 import React from "react";
-import { CardsContainer } from "../styles/style";
 
 import Card from "./Card";
 
+import { CardsContainer } from "../styles/style";
+
 const Cards = ({
-  charities,
   amountDonate,
+  charities,
   selectedAmount,
   selectedCharity,
   onDonate,
@@ -18,9 +19,9 @@ const Cards = ({
       {charities.map(charity => (
         <Card
           key={charity.id}
-          selectedCharity={selectedCharity}
           amountDonate={amountDonate}
           selectedAmount={selectedAmount}
+          selectedCharity={selectedCharity}
           charity={charity}
           onDonate={onDonate}
           onClose={onClose}

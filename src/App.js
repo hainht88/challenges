@@ -1,44 +1,50 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import fetch from "isomorphic-fetch";
-
+import http from "./components/services/http";
 import { summaryDonations } from "./helpers";
 
+import { updateTotalDonate, updateDonateMessage } from "./actions";
 import Cards from "./components/Cards";
 
 import { MainContainer, Message } from "./styles/style";
 
-export default connect(state => state)(
-  class App extends Component {
-    constructor(props) {
-      super();
+const mapStateToProps = ({ donate, message }) => {
+  return { donate, message };
+};
 
-      this.state = {
-        amountDonate: [10, 20, 50, 100, 500],
-        charities: [],
-        selectedAmount: 10,
-        selectedCharity: null
-      };
-    }
+const mapDispatchToProps = dispatch => ({
+  updateTotalDonate: amount => dispatch(updateTotalDonate(amount)),
+  updateDonateMessage: message => dispatch(updateDonateMessage(message))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(
+  class App extends Component {
+    state = {
+      amountDonate: [10, 20, 50, 100, 500],
+      charities: [],
+      selectedAmount: 10,
+      selectedCharity: null
+    };
 
     componentDidMount() {
       const self = this;
-
-      fetch("http://localhost:3001/charities")
-        .then(resp => resp.json())
+      http
+        .get("charities")
         .then(data => self.setState({ charities: data }))
         .catch(e => alert(e));
 
-      fetch("http://localhost:3001/payments")
-        .then(resp => resp.json())
-        .then(data =>
-          self.props.dispatch({
-            type: "UPDATE_TOTAL_DONATE",
-            amount: summaryDonations(
+      http
+        .get("payments")
+        .then(data => {
+          self.props.updateTotalDonate(
+            summaryDonations(
               data.map(item => !isNaN(item.amount) && item.amount)
             )
-          })
-        )
+          );
+        })
         .catch(e => alert(e));
     }
 
@@ -55,44 +61,34 @@ export default connect(state => state)(
     handlePay = (id, amount, currency) => {
       const self = this;
 
-      fetch("http://localhost:3001/payments", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: `{ "charitiesId": ${id}, "amount": ${amount}, "currency": "${currency}" }`
-      })
-        .then(function(resp) {
-          return resp.json();
+      http
+        .post("payments", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: `{ "charitiesId": ${id}, "amount": ${amount}, "currency": "${currency}" }`
         })
-        .then(function() {
-          self.props.dispatch({
-            type: "UPDATE_TOTAL_DONATE",
-            amount
-          });
-          self.props.dispatch({
-            type: "UPDATE_MESSAGE",
-            message: `Thanks for donate ${amount}!`
-          });
+        .then(() => {
+          self.props.updateTotalDonate(amount);
+
+          self.props.updateDonateMessage(`Thanks for donate ${amount}!`);
 
           self.handleClose();
 
           setTimeout(function() {
-            self.props.dispatch({
-              type: "UPDATE_MESSAGE",
-              message: ""
-            });
+            self.props.updateDonateMessage("");
           }, 2000);
         });
     };
 
     render() {
       const self = this;
+      const { donate, message } = self.props;
       const {
-        charities,
         amountDonate,
+        charities,
         selectedAmount,
         selectedCharity
-      } = this.state;
-      const { donate, message } = this.props;
+      } = self.state;
 
       return (
         <MainContainer>
@@ -102,8 +98,8 @@ export default connect(state => state)(
           </p>
           <Message>{message}</Message>
           <Cards
-            charities={charities}
             amountDonate={amountDonate}
+            charities={charities}
             selectedAmount={selectedAmount}
             selectedCharity={selectedCharity}
             onDonate={self.handleDonate}

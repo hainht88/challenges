@@ -1,4 +1,7 @@
 import React from "react";
+
+import PaymentList from "./PaymentList";
+
 import {
   CloseButton,
   CardDonate,
@@ -8,8 +11,6 @@ import {
   CardButton,
   CardContainer
 } from "../styles/style";
-
-import PaymentList from "./PaymentList";
 
 const Card = ({
   charity,

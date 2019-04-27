@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 export const MainContainer = styled.div`
   @import url("https://fonts.googleapis.com/css?family=Roboto");
-
   font-family: "Roboto", sans-serif;
+
   width: 100%;
   margin: 1rem auto;
   font-size: 1rem;
@@ -98,6 +98,10 @@ export const CardButton = styled.button`
   &:hover {
     color: #fff;
     background-color: #4398f0;
+  }
+
+  &:focus {
+    outline: none;
   }
 `;
 
