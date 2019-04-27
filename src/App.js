@@ -39,12 +39,11 @@ class App extends Component {
 
   handleDonate = charitiesId => this.handleClose(charitiesId);
 
-  handleClose = (charitiesId = 0, selectedAmount = 10) => {
-    return this.setState({
+  handleClose = (charitiesId = 0, selectedAmount = 10) =>
+    this.setState({
       selectedCharity: charitiesId,
       selectedAmount
     });
-  };
 
   handlePay = (id, amount, currency) => {
     const self = this;
@@ -83,7 +82,6 @@ class App extends Component {
         <p>
           All donations: <strong>{donate}</strong>
         </p>
-
         <Cards
           message={message}
           amountDonate={amountDonate}
