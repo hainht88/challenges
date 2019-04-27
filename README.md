@@ -9,8 +9,7 @@
 
 ## Mission
 
-Well, grap your guns, stock up your food and bring down your armor. We gonna need it for tonight!  
-**Here are the tasks you must complete:**
+**Here are the tasks I've done:**
 
 - [ DONE ] Complete the application according to the design (image above).
 - [ DONE ] Complete these features that are not in the design (you have freedom to design and position to display).
@@ -33,7 +32,7 @@ Well, grap your guns, stock up your food and bring down your armor. We gonna nee
 
 1 - There is "API_URL" param inside D:\Projects\challenges\src\components\services\http.js.
 
-**Please change it to static IP (ex: const API_URL = "http://192.168.1.110:3001/";) to open this page on Mobile devices**
+**! Please change it to static IP (ex: const API_URL = "http://192.168.1.110:3001/";) to open this page on Mobile devices**
 
 2 - Open 2 CMD, first one please type "npm run server" and second one please type "npm run client"
 
