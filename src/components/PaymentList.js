@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+
 import { DonateList } from "../styles/style";
 
 const PaymentList = ({ amountDonate, selectedAmount, onPaymentChange }) => {
@@ -17,6 +19,12 @@ const PaymentList = ({ amountDonate, selectedAmount, onPaymentChange }) => {
       ))}
     </DonateList>
   );
+};
+
+PaymentList.propTypes = {
+  amountDonate: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+  selectedAmount: PropTypes.number.isRequired,
+  onPaymentChange: PropTypes.func.isRequired
 };
 
 export default PaymentList;

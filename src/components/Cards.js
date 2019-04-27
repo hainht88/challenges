@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import Card from "./Card";
 
@@ -33,6 +34,18 @@ const Cards = ({
       ))}
     </CardsContainer>
   );
+};
+
+Cards.propTypes = {
+  message: PropTypes.string.isRequired,
+  amountDonate: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+  charities: PropTypes.arrayOf(PropTypes.object.isRequired).isRequired,
+  selectedAmount: PropTypes.number.isRequired,
+  selectedCharity: PropTypes.number.isRequired,
+  onDonate: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onPay: PropTypes.func.isRequired,
+  onPaymentChange: PropTypes.func.isRequired
 };
 
 export default Cards;

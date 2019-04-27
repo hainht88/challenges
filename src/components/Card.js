@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import PropTypes from "prop-types";
 
 import PaymentList from "./PaymentList";
 
@@ -28,7 +29,7 @@ const Card = ({
   <CardContainer>
     {selectedCharity === charity.id && (
       <div>
-        <CloseButton onClick={onClose}>
+        <CloseButton onClick={() => onClose()}>
           <span>&times;</span>
         </CloseButton>
         <CardDonate>
@@ -63,5 +64,22 @@ const Card = ({
     </CardContent>
   </CardContainer>
 );
+
+Card.propTypes = {
+  message: PropTypes.string.isRequired,
+  amountDonate: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+  charity: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+    currency: PropTypes.string.isRequired
+  }).isRequired,
+  selectedAmount: PropTypes.number.isRequired,
+  selectedCharity: PropTypes.number.isRequired,
+  onDonate: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onPay: PropTypes.func.isRequired,
+  onPaymentChange: PropTypes.func.isRequired
+};
 
 export default Card;
